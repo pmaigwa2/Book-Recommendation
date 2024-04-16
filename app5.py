@@ -27,19 +27,19 @@ def find_similar_books(input_book, top_n=10):
     # Compute cosine similarity between input book and all other books in the same cluster
     similarities = cosine_similarity(input_tfidf, tfidf_matrix[clusters == input_cluster]).flatten()
 
-    # Exclude input book from similarity calculation
+    # Exclude input book from the similarity calculation
     similarities = similarities[1:]
 
     # Get indices of top similar books
     top_indices = similarities.argsort()[::-1][:top_n]
 
-    # Get top similar books and their clusters
+    # Get top similar books and their clusters.
     recommended_books = cluster_books.iloc[top_indices][['title', 'cluster']]
 
     return recommended_books
 
 def get_book_info(recommended_books, books):
-    # Filter the 'books' dataset based on the recommended book titles.
+    # Filter the 'books' dataset based on recommended book titles.
     recommended_books_info = books[books['title'].isin(recommended_books['title'])]
 
     # Select and display the relevant information for the recommended books.
@@ -53,7 +53,8 @@ books = pd.read_csv('books.csv')
 # App layout
 st.title('Book Recommendation Model')
 
-st.write('<p style="color:green.; line-height: 0.5em;">Enter a book you like to see ten similar books you will love. You can read these books on Goodreads.</p>', unsafe_allow_html=True)
+st.write('<p style="color:green; line-height: 0.5em;">Enter a book you like to see ten similar books you will love.</p>', unsafe_allow_html=True)
+st.markdown('<p style="color:green; line-height: 2.5em;">You can read the recommended books on <a href="https://www.goodreads.com/" style="color:blue;">Goodreads</a>.</p>', unsafe_allow_html=True)
 st.write('<p style="color:green; line-height: 2.5em;">Click on a recommended book to view more details about it.</p>', unsafe_allow_html=True)
 
 
@@ -72,7 +73,7 @@ if 'recommendations' not in st.session_state:
 if st.button('Get Recommendations'):
     st.session_state.recommendations = get_recommendations(selected_book)
 
-# Display book titles as buttons
+# Display book titles as buttons( so that users can view more details when they click)
 for index, row in st.session_state.recommendations.iterrows():
     if st.button(row['title']):
         # When a book title button is clicked, show the book details
